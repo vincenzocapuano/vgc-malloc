@@ -160,12 +160,15 @@ static void vgc_stacktrace(int sigNumber, siginfo_t *info, void *ucontext)
 
 		char addr2line[1024];
 		sprintf(addr2line, "addr2line -Cfipe %s%s", strncmp(messages[i], self->base, strlen(self->base)) == 0 ? (*self->base = 0, self->path) : "", messages[i]);
-
 		FILE *in = popen(addr2line, "r");
 		if (in != 0) {
 			fgets(addr2line, 1024, in);
 			pclose(in);
-			if (addr2line[0] != '?') vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "[bt]", "Memory error in", 0, "%s", addr2line);
+			if (addr2line[0] != '?') {
+				int len = strlen(addr2line) - 1;
+				if (len > 0) addr2line[strlen(addr2line) - 1] = 0;
+				vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "[bt]", "Memory error in", 0, "%s", addr2line);
+			}
 		}
 	}
 
