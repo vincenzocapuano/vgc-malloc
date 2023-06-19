@@ -76,9 +76,9 @@ static void dumpMmapBlock(char *response, size_t size, const char *str, VGC_mmap
 	const char *dashes =  "---------------------------------------------------------------------";
 
 	if (response != 0) {
-		sprintf(&response[strlen(response)], "\nMMAP at 0x%.12lx\n", (long unsigned int)mmapBlock);
-		sprintf(&response[strlen(response)], " ID memory         prev           next           status    size\n");
-		sprintf(&response[strlen(response)], "%s\n",dashes);
+		snprintf(&response[strlen(response)], mmapBlock->maxSize, "\nMMAP at 0x%.12lx\n", (long unsigned int)mmapBlock);
+		snprintf(&response[strlen(response)], mmapBlock->maxSize, " ID memory         prev           next           status    size\n");
+		snprintf(&response[strlen(response)], mmapBlock->maxSize, "%s\n",dashes);
 	}
 	else {
 		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, desc, 0, "MMAP at 0x%.12lx", mmapBlock);
@@ -102,7 +102,7 @@ static void dumpMmapBlock(char *response, size_t size, const char *str, VGC_mmap
 
 		if (response != 0) {
 			char buffer[200];
-			sprintf(buffer, "%s%3d%s 0x%.12lx%s 0x%.12lx 0x%.12lx %s%s%s %9d bytes\n",
+			snprintf(buffer, 200, "%s%3d%s 0x%.12lx%s 0x%.12lx 0x%.12lx %s%s%s %9d bytes\n",
 					c_blue, i++, c_black,
 					(long unsigned int)((char*)mallocBlock + sizeof(VGC_mallocHeader)), c_red,
 					mallocBlock->prev == 0 ? 0 : (long unsigned int)((char*)mallocBlock->prev + sizeof(VGC_mallocHeader)),
@@ -134,37 +134,37 @@ static void dumpMmapBlock(char *response, size_t size, const char *str, VGC_mmap
 	if (response != 0) {
 		char buffer[100];
 
-		sprintf(buffer, "%s\n", dashes);
+		snprintf(buffer, 100, "%s\n", dashes);
 		int length = strlen(response);
 		if (length + strlen(buffer) >= size) return;
 		strcat(&response[length], buffer);
 
-		sprintf(buffer, "%ssize allocated.: %s%9d bytes\n", c_black, c_blue, (int)shared->mmapBlockSize);
+		snprintf(buffer, 100, "%ssize allocated.: %s%9d bytes\n", c_black, c_blue, (int)shared->mmapBlockSize);
 		length = strlen(response);
 		if (length + strlen(buffer) >= size) return;
 		strcat(&response[length], buffer);
 
-		sprintf(buffer, "%ssize busy......: %s%9d bytes\n", c_black, c_blue, (int)busySize);
+		snprintf(buffer, 100, "%ssize busy......: %s%9d bytes\n", c_black, c_blue, (int)busySize);
 		length = strlen(response);
 		if (length + strlen(buffer) >= size) return;
 		strcat(&response[length], buffer);
 
-		sprintf(buffer, "%ssize free......: %s%9d bytes\n", c_black, c_blue, (int)freeSize);
+		snprintf(buffer, 100, "%ssize free......: %s%9d bytes\n", c_black, c_blue, (int)freeSize);
 		length = strlen(response);
 		if (length + strlen(buffer) >= size) return;
 		strcat(&response[length], buffer);
 
-		sprintf(buffer, "%ssize total.....: %s%9d bytes *\n", c_black, c_green, (int)totalSize);
+		snprintf(buffer, 100, "%ssize total.....: %s%9d bytes *\n", c_black, c_green, (int)totalSize);
 		length = strlen(response);
 		if (length + strlen(buffer) >= size) return;
 		strcat(&response[length], buffer);
 
-		sprintf(buffer, "%ssize max.......: %s%9d bytes *\n", c_black, c_green, (int)maxSize);
+		snprintf(buffer, 100, "%ssize max.......: %s%9d bytes *\n", c_black, c_green, (int)maxSize);
 		length = strlen(response);
 		if (length + strlen(buffer) >= size) return;
 		strcat(&response[length], buffer);
 
-		sprintf(buffer, "%s%s\n", c_black, dashes);
+		snprintf(buffer, 100, "%s%s\n", c_black, dashes);
 		length = strlen(response);
 		if (length + strlen(buffer) >= size) return;
 		strcat(&response[length], buffer);
