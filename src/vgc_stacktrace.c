@@ -54,6 +54,7 @@ void vgc_stacktraceShow(VGC_mallocHeader *mallocBlock)
 	ProcessPath *self = getProcessPath();
 
 	for (int i = 2; i + 1 < mallocBlock->btArraySize; i++) {
+		if (strncmp(messages[i], "/lib/", strlen("/lib/")) == 0) continue;
 		if (strncmp(messages[i], "/lib64/", strlen("/lib64/")) == 0) continue;
 		if (strncmp(messages[i], "/usr/lib64/", strlen("/usr/lib64/")) == 0) continue;
 		char *space = strchr(messages[i], '(');
