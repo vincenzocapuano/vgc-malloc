@@ -15,6 +15,10 @@
 #include "vgc_malloc.h"
 
 
+#ifndef VGC_MALLOC_DEBUG_LEVEL
+# define VGC_MALLOC_DEBUG_LEVEL 4
+#endif
+
 #ifndef VGC_MALLOC_MMAP_PAGES
 # define VGC_MALLOC_MMAP_PAGES 8000
 #endif
