@@ -3,9 +3,7 @@
 #include <stdio.h>
 
 #include "vgc_message.h"
-#include "vgc_malloc_mprotect.h"
 #include "vgc_malloc.h"
-#include "vgc_stacktrace.h"
 
 
 
@@ -26,7 +24,7 @@ int main(void)
 	vgc_free(a);
 	pippo();
 #endif
-#if 0
+#if 1
 	char *b = vgc_malloc(10);
 	printf("b:0x%lx\n", (unsigned long int)b);
 	vgc_free(b);

@@ -32,7 +32,7 @@ $(OBJDIR)/test2.o:	test/test2.cpp Makefile
 $(OBJDIR)/test3.o:	test/test3.c Makefile
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
-$(LIBDIR)/libvgcmalloc.so:	$(OBJDIR)/vgc_common.o $(OBJDIR)/vgc_pthread.o $(OBJDIR)/vgc_message.o $(OBJDIR)/vgc_malloc.o $(OBJDIR)/vgc_malloc_mprotect.o $(OBJDIR)/vgc_stacktrace.o $(OBJDIR)/vgc_network.o
+$(LIBDIR)/libvgcmalloc.so:	$(OBJDIR)/vgc_common.o $(OBJDIR)/vgc_pthread.o $(OBJDIR)/vgc_message.o $(OBJDIR)/vgc_malloc.o $(OBJDIR)/vgc_mprotect.o $(OBJDIR)/vgc_stacktrace.o $(OBJDIR)/vgc_network.o
 	gcc $(LIB) -shared -pthread -o $@ $^
 
 $(LIBDIR)/libvgcnew.so:		$(OBJDIR)/vgc_new.o $(OBJDIR)/vgc_memoryManager.o
@@ -41,7 +41,7 @@ $(LIBDIR)/libvgcnew.so:		$(OBJDIR)/vgc_new.o $(OBJDIR)/vgc_memoryManager.o
 $(OBJDIR)/vgc_malloc.o:	src/vgc_malloc.c Makefile src/vgc_malloc.h src/vgc_malloc_private.h
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
-$(OBJDIR)/vgc_malloc_mprotect.o:	src/vgc_malloc_mprotect.c Makefile src/vgc_malloc_mprotect.h
+$(OBJDIR)/vgc_mprotect.o:	src/vgc_mprotect.c Makefile src/vgc_mprotect.h
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
 $(OBJDIR)/vgc_network.o:	src/vgc_network.c Makefile src/vgc_network.h

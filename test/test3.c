@@ -3,9 +3,7 @@
 #include <stdio.h>
 
 #include "vgc_message.h"
-#include "vgc_malloc_mprotect.h"
 #include "vgc_malloc.h"
-#include "vgc_stacktrace.h"
 
 
 
@@ -16,9 +14,9 @@ int main(void)
 	char *a = vgc_malloc(100);
 	printf("a:0x%lx\n", (unsigned long int)a);
 
-	a[100] = 1;
+//	a[100] = 1;
 
-	vgc_free(a);
+//	vgc_free(a);
 
 	printf("End\n");
 }

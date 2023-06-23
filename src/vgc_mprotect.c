@@ -2,7 +2,7 @@
 // Copyright (C) 2015-2020 by Vincenzo Capuano
 //
 #include "vgc_common.h"
-#include "vgc_malloc_mprotect.h"
+#include "vgc_mprotect.h"
 
 extern VGC_shared *shared;
 

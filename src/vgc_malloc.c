@@ -10,8 +10,8 @@
 #include "vgc_common.h"
 #include "vgc_message.h"
 #include "vgc_stacktrace.h"
+#include "vgc_mprotect.h"
 #include "vgc_malloc_private.h"
-#include "vgc_malloc_mprotect.h"
 #include "vgc_malloc.h"
 
 
