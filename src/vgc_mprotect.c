@@ -1,6 +1,9 @@
 //
 // Copyright (C) 2015-2020 by Vincenzo Capuano
 //
+
+// The number of concurrently open mprotect() we can call is regulated by parameter /proc/sys/vm/max_map_count
+//
 #include "vgc_common.h"
 #include "vgc_mprotect.h"
 
@@ -388,14 +391,12 @@ bool VGC_munprotect(VGC_mallocHeader *header)
 	mprotectDistribute(header, prot);
 	return true;
 }
-#endif
 
 
 // startMprotect
 //
 bool startMprotect(int maxProcesses)
 {
-#ifdef VGC_MALLOC_MPROTECT
 	shared->maxProcesses = maxProcesses;
 
 	// Allocate space for children
@@ -418,7 +419,6 @@ bool startMprotect(int maxProcesses)
 	//
 	register_command_extend("Stop MMAP boundary control", CHILD_STOP_CMD, shared, stopChildDebugCorruption);
 #endif
-#endif
 	return true;
 }
 
@@ -427,7 +427,6 @@ bool startMprotect(int maxProcesses)
 //
 void stopMprotect(void)
 {
-#ifdef VGC_MALLOC_MPROTECT
 	// For master process
 	//
 	vgc_message(VGC_MALLOC_DEBUG_LEVEL + 2, __FILE__, __LINE__, moduleName, __func__, "Stopping master", "Stopping threads", "", 0);
@@ -453,7 +452,6 @@ void stopMprotect(void)
 			vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "munmap", "Error", "unmapping MMAP (shared->children)", ": %s", strerror(errno));
 		}
 	}
-#endif
 }
 
 
@@ -461,13 +459,9 @@ void stopMprotect(void)
 //
 void configMprotect(VGC_shared *s)
 {
-#ifdef VGC_MALLOC_MPROTECT
         s->isMprotectEnabled = true;
         s->maxProcesses = 0;
         s->children = 0;
-#else
-        s->isMprotectEnabled = false;
-#endif
 }
 
 
@@ -486,9 +480,7 @@ ATTR_PUBLIC const char *VGC_mallocStatusDebugCorruption(void)
 //
 void startChildMprotect(void)
 {
-#ifdef VGC_MALLOC_MPROTECT
 	startChildDebugCorruption(0, 0, shared);
-#endif
 }
 
 
@@ -496,7 +488,6 @@ void startChildMprotect(void)
 //
 void stopChildMprotect(void)
 {
-#ifdef VGC_MALLOC_MPROTECT
 	stopChildDebugCorruption(0, 0, shared);
-#endif
 }
+#endif

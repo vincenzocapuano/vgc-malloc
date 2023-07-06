@@ -1,7 +1,7 @@
 //
-// Copyright (C) 2015-2020 by Vincenzo Capuano
+// Copyright (C) 2015-2023 by Vincenzo Capuano
 //
-#ifdef VGC_MALLOC_MPROTECT
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 
 #include <errno.h>
 #include <unistd.h>

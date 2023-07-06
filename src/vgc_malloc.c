@@ -515,6 +515,7 @@ static VGC_shared *createShared(void)
 	s->mmapBlockFirst = 0;
 	s->mmapBlockSize = VGC_MALLOC_MMAP_PAGES * s->pageSize;
 
+	s->isMprotectEnabled = false;
 	configMprotect(s);
 	return s;
 }

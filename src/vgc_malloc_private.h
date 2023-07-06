@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2020 by Vincenzo Capuano
+// Copyright (C) 2015-2023 by Vincenzo Capuano
 //
 #pragma once
 
@@ -8,7 +8,7 @@
 
 // Defines
 //
-#ifdef VGC_MALLOC_MPROTECT
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 #define VGC_MALLOC_SYSTEM_PAGE_SIZE 4096
 #endif
 #ifdef VGC_MALLOC_STACKTRACE
@@ -27,7 +27,7 @@ typedef enum {
 // MMAP header block
 //
 typedef struct VGC_mmapHeader {
-#ifdef VGC_MALLOC_MPROTECT
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 	union {
 		char                           alignBuffer[VGC_MALLOC_SYSTEM_PAGE_SIZE];
 		struct {
@@ -42,7 +42,7 @@ typedef struct VGC_mmapHeader {
 			struct VGC_mmapHeader *prev;
 			struct VGC_mmapHeader *next;
 			unsigned char          checkEnd;
-#ifdef VGC_MALLOC_MPROTECT
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 		};
 	};
 #endif
@@ -52,7 +52,7 @@ typedef struct VGC_mmapHeader {
 // Malloc header block
 //
 typedef struct VGC_mallocHeader {
-#ifdef VGC_MALLOC_MPROTECT
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 	union {
 		char                             alignBuffer[VGC_MALLOC_SYSTEM_PAGE_SIZE * 2];
 		struct {
@@ -69,7 +69,7 @@ typedef struct VGC_mallocHeader {
 			void			*btArray[VGC_MALLOC_STACKTRACE_SIZE];
 			size_t			 btArraySize;
 #endif
-#ifdef VGC_MALLOC_MPROTECT
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 		};
 	};
 #endif
@@ -78,7 +78,7 @@ typedef struct VGC_mallocHeader {
 
 // All the malloc management data is here
 //
-#ifdef VGC_MALLOC_MPROTECT
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 # define SocketNameSize 100
 
 typedef struct VGC_mallocDebugChild {
@@ -98,7 +98,7 @@ typedef struct VGC_shared {
 	int                   mmapBlockCount;
 	size_t		      mmapBlockSize;		// Number of pages of 4kB (_SC_PAGE_SIZE) to allocate at each call of MMAP
 	bool		      isMprotectEnabled;
-#ifdef VGC_MALLOC_MPROTECT
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 	int                   maxProcesses;
 	bool                  isFather;
 	VGC_mallocDebugChild *children;
