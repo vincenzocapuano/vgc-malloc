@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2012-2020 by Vincenzo Capuano
+// Copyright (C) 2012-2024 by Vincenzo Capuano
 //
 #include <stdio.h>
 #include <errno.h>

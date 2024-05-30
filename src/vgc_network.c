@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2023 by Vincenzo Capuano
+// Copyright (C) 2015-2024 by Vincenzo Capuano
 //
 #if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
 

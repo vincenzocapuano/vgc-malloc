@@ -1,3 +1,5 @@
+// Test how many mprotect we can call, it is regulated by parameter /proc/sys/vm/max_map_count
+//
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
@@ -6,7 +8,6 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-// Test how many mprotect we can call, it is regulated by parameter /proc/sys/vm/max_map_count
 
 #define PAGESIZE 4096
 

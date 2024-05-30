@@ -1,0 +1,4 @@
+Increase the size of the number of mprotects
+
+echo 100000 > /proc/sys/vm/max_map_count
+cat /proc/sys/vm/max_map_count

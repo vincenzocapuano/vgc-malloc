@@ -2,9 +2,6 @@
 #include <iostream>
 
 
-
-#undef MEMMGR
-
 #ifdef MEMMGR
 #include <new>
 #include "vgc_memoryManager.hpp"

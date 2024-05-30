@@ -1,7 +1,7 @@
 //
-// Copyright (C) 2016-2020 by Vincenzo Capuano
+// Copyright (C) 2016-2024 by Vincenzo Capuano
 //
-#define _GNU_SOURCE	// Needed for REG_RIP
+//#define _GNU_SOURCE	// Needed for REG_RIP - It is in the Makefile
 
 #include <stdio.h>
 #include <stdlib.h>

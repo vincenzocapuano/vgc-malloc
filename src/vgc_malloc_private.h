@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2023 by Vincenzo Capuano
+// Copyright (C) 2015-2024 by Vincenzo Capuano
 //
 #pragma once
 
@@ -57,6 +57,9 @@ typedef struct VGC_mallocHeader {
 		char                             alignBuffer[VGC_MALLOC_SYSTEM_PAGE_SIZE * 2];
 		struct {
 			char                     protect[VGC_MALLOC_SYSTEM_PAGE_SIZE];
+#ifdef VGC_MALLOC_PKEYMPROTECT
+			int			 pkey;
+#endif
 #endif
 			unsigned char            checkStart;
 			size_t                   size;

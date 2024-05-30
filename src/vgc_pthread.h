@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2013-2018 by Vincenzo Capuano
+// Copyright (C) 2013-2024 by Vincenzo Capuano
 //
 #pragma once
 

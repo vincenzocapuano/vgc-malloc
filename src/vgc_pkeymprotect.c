@@ -1,24 +1,23 @@
 //
-// Copyright (C) 2015-2023 by Vincenzo Capuano
+// Copyright (C) 2015-2024 by Vincenzo Capuano
 //
-#include "vgc_common.h"
-#include "vgc_mprotect.h"
-
-extern VGC_shared *shared;
-
 #ifdef VGC_MALLOC_PKEYMPROTECT
 
-#include <sys/mman.h>
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/un.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
 
 #include "vgc_message.h"
 #include "vgc_network.h"
+#include "vgc_common.h"
+#include "vgc_mprotect.h"
 
+
+extern VGC_shared *shared;
 
 static const char *moduleName = "VGC-MALLOC-MPROTECT";
 static const char *SocketPath = "/tmp/vgc-malloc";
@@ -65,9 +64,53 @@ static int countChildren(void)
 }
 
 
-static bool do_mprotect(void *addr, size_t len, int prot)
+static bool do_mprotect(void *addr, size_t len, int prot, int *pkey)
 {
+#if 1
+	if (prot == PROT_NONE) {
+		*pkey = pkey_alloc(0, PKEY_DISABLE_ACCESS);
+printf("-----> %d - errno: %d\n", *pkey, errno);
+		if (*pkey == -1) {
+			char *s = "protecting returned";
+			switch(errno) {
+				// pkey, flags, or access_rights is invalid
+				//
+				case EINVAL:
+
+				// (pkey_alloc()) All protection keys available for the current process have been allocated.
+				// The number of keys available is architecture-specific and implementation-specific and may
+				// be reduced by kernel-internal use of certain keys.
+				// ** There are currently 15 keys available to user programs on x86.**
+				//
+				// This  error will also be returned if the processor or operating system does not support protection keys.
+				// Applications should always be prepared to handle this error, since factors out‐side of the application's
+				// control can reduce the number of available pkeys.
+				//
+				case ENOSPC:
+					vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "Error", s, 0, "%d - %s", errno, strerror(errno));
+					break;
+
+				default:
+					vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "Unknown error", s, 0, "%d - %s", errno, strerror(errno));
+					break;
+			}
+
+			return false;
+		}
+	}
+
+	int ret = pkey_mprotect(addr, len, prot, *pkey);
+	if (ret == 0) {
+		if (prot == PROT_NONE) return true;
+		if (pkey_free(*pkey) == 0) {
+			*pkey = 0;
+			return true;
+		}
+	}
+
+#else
 	if (mprotect(addr, len, prot) == 0) return true;
+#endif
 
 	char *s = prot == PROT_NONE ? "protecting returned" : "unprotecting returned";
 
@@ -145,7 +188,7 @@ static void *manageCorruptionThread(void *_child)
 
 			vgc_message(VGC_MALLOC_DEBUG_LEVEL + 1, __FILE__, __LINE__, moduleName, __func__, "Debug corruption thread", "", "", "%sprotect at 0x%lx - pid %u from pid %u", block.prot == PROT_NONE ? "" : "un", block.header->protect, child->pid, block.sourcePID);
 
-			if (!do_mprotect(block.header->protect, shared->pageSize, block.prot)) {
+			if (!do_mprotect(block.header->protect, shared->pageSize, block.prot, &block.header->pkey)) {
 				// check errno, error
 				//
 				vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "Error", "", "", "%sprotecting returned: %d - %s - at 0x%lx - pid %u from pid %u", block.prot == PROT_NONE ? "" : "un", errno, strerror(errno), block.header->protect, child->pid, block.sourcePID);
@@ -370,7 +413,7 @@ bool VGC_mprotect(VGC_mallocHeader *header)
 
 	const int prot = PROT_NONE;
 
-	if (!do_mprotect(header->protect, shared->pageSize, prot)) return false;
+	if (!do_mprotect(header->protect, shared->pageSize, prot, &header->pkey)) return false;
 	mprotectDistribute(header, prot);
 	return true;
 }
@@ -384,7 +427,7 @@ bool VGC_munprotect(VGC_mallocHeader *header)
 
 	const int prot = PROT_READ | PROT_WRITE;
 
-	if (!do_mprotect(header->protect, shared->pageSize, prot)) return false;
+	if (!do_mprotect(header->protect, shared->pageSize, prot, &header->pkey)) return false;
 	mprotectDistribute(header, prot);
 	return true;
 }

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2020 by Vincenzo Capuano
+// Copyright (C) 2015-2024 by Vincenzo Capuano
 //
 #include <errno.h>
 #include <stdio.h>
@@ -11,6 +11,7 @@
 #include "vgc_message.h"
 #include "vgc_stacktrace.h"
 #include "vgc_mprotect.h"
+#include "vgc_mprotect_mp.h"
 #include "vgc_malloc_private.h"
 #include "vgc_malloc.h"
 
