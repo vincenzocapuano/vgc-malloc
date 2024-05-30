@@ -10,7 +10,7 @@
 
 extern VGC_shared *shared;
 
-#ifdef VGC_MALLOC_MPROTECT
+#ifdef VGC_MALLOC_MPROTECT_PKEY
 
 #include <sys/mman.h>
 #include <errno.h>
@@ -27,9 +27,54 @@ extern VGC_shared *shared;
 static const char *moduleName = "VGC-MALLOC-MPROTECT";
 
 
-bool do_mprotect(void *addr, size_t len, int prot)
+
+static bool do_mprotect(void *addr, size_t len, int prot, int *pkey)
 {
+#if 1
+	if (prot == PROT_NONE) {
+		*pkey = pkey_alloc(0, PKEY_DISABLE_ACCESS);
+printf("-----> %d - errno: %d\n", *pkey, errno);
+		if (*pkey == -1) {
+			char *s = "protecting returned";
+			switch(errno) {
+				// pkey, flags, or access_rights is invalid
+				//
+				case EINVAL:
+
+				// (pkey_alloc()) All protection keys available for the current process have been allocated.
+				// The number of keys available is architecture-specific and implementation-specific and may
+				// be reduced by kernel-internal use of certain keys.
+				// ** There are currently 15 keys available to user programs on x86.**
+				//
+				// This  error will also be returned if the processor or operating system does not support protection keys.
+				// Applications should always be prepared to handle this error, since factors out‐side of the application's
+				// control can reduce the number of available pkeys.
+				//
+				case ENOSPC:
+					vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "Error", s, 0, "%d - %s", errno, strerror(errno));
+					break;
+
+				default:
+					vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "Unknown error", s, 0, "%d - %s", errno, strerror(errno));
+					break;
+			}
+
+			return false;
+		}
+	}
+
+	int ret = pkey_mprotect(addr, len, prot, *pkey);
+	if (ret == 0) {
+		if (prot == PROT_NONE) return true;
+		if (pkey_free(*pkey) == 0) {
+			*pkey = 0;
+			return true;
+		}
+	}
+
+#else
 	if (mprotect(addr, len, prot) == 0) return true;
+#endif
 
 	char *s = prot == PROT_NONE ? "protecting returned" : "unprotecting returned";
 
@@ -63,7 +108,6 @@ bool do_mprotect(void *addr, size_t len, int prot)
 
 	return false;
 }
-
 
 
 // VGC_mprotect

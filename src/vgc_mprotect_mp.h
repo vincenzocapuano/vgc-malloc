@@ -6,7 +6,7 @@
 #include "vgc_mprotect.h"
 
 
-#if defined(VGC_MALLOC_MPROTECT_MP) && (defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT))
+#if defined(VGC_MALLOC_MPROTECT_MP) && (defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_MPROTECT_PKEY))
 bool startMprotect(int maxProcesses);
 void stopMprotect(void);
 void configMprotect(VGC_shared *shared);
