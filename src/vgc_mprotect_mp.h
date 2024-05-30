@@ -3,7 +3,6 @@
 //
 #pragma once
 
-#include "vgc_malloc_private.h"
 #include "vgc_mprotect.h"
 
 

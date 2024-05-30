@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2024 by Vincenzo Capuano
+// Copyright (C) 2024 by Vincenzo Capuano
 //
 
 // The number of concurrently open mprotect() we can call is regulated by parameter /proc/sys/vm/max_map_count

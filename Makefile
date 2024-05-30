@@ -76,7 +76,7 @@ $(OBJDIR)/vgc_malloc.o:	src/vgc_malloc.c Makefile src/vgc_malloc.h src/vgc_mallo
 $(OBJDIR)/vgc_mprotect.o:	src/vgc_mprotect.c Makefile src/vgc_mprotect.h
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
-$(OBJDIR)/vgc_mprotect_mp.o:	src/vgc_mprotect_mp.c Makefile src/vgc_mprotect_mp.h
+$(OBJDIR)/vgc_mprotect_mp.o:	src/vgc_mprotect_mp.c Makefile src/vgc_mprotect_mp.h src/vgc_mprotect.h
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
 $(OBJDIR)/vgc_pkeymprotect.o:	src/vgc_pkeymprotect.c Makefile src/vgc_mprotect.h
