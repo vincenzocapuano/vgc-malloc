@@ -2,7 +2,7 @@
 #
 COMP   = -march=core2 -m64 -fno-common -pipe -pthread -fPIC -fsigned-char -fmax-errors=4 -Isrc
 LIB    = -pipe -pthread
-OPTS   = -D_GNU_SOURCE -DVGC_MALLOC_DEBUG_LEVEL=4 -DVGC_MALLOC_STACKTRACE -DVGC_MALLOC_MPROTECT -UVGC_MALLOC_PKEYMPROTECT -DVGC_MALLOC_STACKTRACE_SIGNAL -UVGC_MALLOC_MPROTECT_MP
+OPTS   = -D_GNU_SOURCE -DVGC_MALLOC_DEBUG_LEVEL=4 -DVGC_MALLOC_STACKTRACE -DVGC_MALLOC_MPROTECT -UVGC_MALLOC_MPROTECT_PKEY -DVGC_MALLOC_STACKTRACE_SIGNAL -UVGC_MALLOC_MPROTECT_MP
 LIBDIR = $(HOME)/devel/vgcmalloc/lib64
 BINDIR = $(HOME)/devel/vgcmalloc/bin
 OBJDIR = /tmp/obj/vgcmalloc
@@ -21,8 +21,8 @@ ifneq ("","$(findstring -DVGC_MALLOC_MPROTECT_MP,$(OPTS))")
 	OBJS += $(OBJDIR)/vgc_mprotect_mp.o
 endif
 
-ifneq ("","$(findstring -DVGC_MALLOC_PKEYMPROTECT,$(OPTS))")
-	OBJS += $(OBJDIR)/vgc_pkeymprotect.o
+ifneq ("","$(findstring -DVGC_MALLOC_MPROTECT_PKEY,$(OPTS))")
+	OBJS += $(OBJDIR)/vgc_mprotect_pkey.o
 endif
 
 
@@ -79,7 +79,7 @@ $(OBJDIR)/vgc_mprotect.o:	src/vgc_mprotect.c Makefile src/vgc_mprotect.h
 $(OBJDIR)/vgc_mprotect_mp.o:	src/vgc_mprotect_mp.c Makefile src/vgc_mprotect_mp.h src/vgc_mprotect.h
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
-$(OBJDIR)/vgc_pkeymprotect.o:	src/vgc_pkeymprotect.c Makefile src/vgc_mprotect.h
+$(OBJDIR)/vgc_mprotect_pkey.o:	src/vgc_mprotect_pkey.c Makefile src/vgc_mprotect.h
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
 $(OBJDIR)/vgc_network.o:	src/vgc_network.c Makefile src/vgc_network.h
