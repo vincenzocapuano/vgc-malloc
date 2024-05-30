@@ -1,7 +1,7 @@
 //
 // Copyright (C) 2015-2024 by Vincenzo Capuano
 //
-#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_PKEYMPROTECT)
+#if defined(VGC_MALLOC_MPROTECT_MP) && (defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_MPROTECT_PKEY))
 
 #include <errno.h>
 #include <unistd.h>
