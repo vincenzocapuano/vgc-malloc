@@ -10,10 +10,6 @@
 bool VGC_mprotect(VGC_mallocHeader *header);
 bool VGC_munprotect(VGC_mallocHeader *header);
 bool do_mprotect(void *addr, size_t len, int prot);
-#else
-# define VGC_mprotect(a)   /**/
-# define VGC_munprotect(a) /**/
-# define do_mprotect(a) /**/ 
 #endif
 
 

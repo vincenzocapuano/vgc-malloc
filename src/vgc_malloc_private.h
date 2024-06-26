@@ -100,10 +100,12 @@ typedef struct VGC_shared {
 	VGC_mmapHeader       *mmapBlockFirst;
 	int                   mmapBlockCount;
 	size_t		      mmapBlockSize;		// Number of pages of 4kB (_SC_PAGE_SIZE) to allocate at each call of MMAP
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_MPROTECT_PKEY)
 	bool		      isMprotectEnabled;
-#if defined(VGC_MALLOC_MPROTECT_MP) && (defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_MPROTECT_PKEY))
+#  if defined(VGC_MALLOC_MPROTECT_MP)
 	int                   maxProcesses;
 	bool                  isFather;
 	VGC_mallocDebugChild *children;
+#  endif
 #endif
 } VGC_shared;

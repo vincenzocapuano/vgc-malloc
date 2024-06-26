@@ -276,7 +276,9 @@ static void mallocCleanup(void)
 		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "PTHREAD_mutexDestroy", "Error", "can't destroy shared mutexAttr", 0);
 	}
 
+#if defined(VGC_MALLOC_MPROTECT_MP)
 	if (shared->isMprotectEnabled) stopMprotect();
+#endif
 
 	if (munmap(shared, sizeof(VGC_shared)) == -1) {
 		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "munmap", "Error", "unmapping MMAP (shared)", ": %s", strerror(errno));
@@ -398,9 +400,11 @@ static void *allocMallocBlock(VGC_mmapHeader *mmapBlock, size_t length)
 	}
 
 	int lengthOrig = length;
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_MPROTECT_PKEY)
 	if (shared->isMprotectEnabled) {
 		length = (length % shared->pageSize == 0) ? length : (length / shared->pageSize + 1) * shared->pageSize;
 	}
+#endif
 
 	// Next is the remaining free space
 	// Is there any free space remaining in the block?
@@ -516,8 +520,15 @@ static VGC_shared *createShared(void)
 	s->mmapBlockFirst = 0;
 	s->mmapBlockSize = VGC_MALLOC_MMAP_PAGES * s->pageSize;
 
+#if defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_MPROTECT_PKEY)
+	s->isMprotectEnabled = true;
+#  if defined(VGC_MALLOC_MPROTECT_MP)
+	s->maxProcesses = 0;
+	s->children = 0;
+#  endif
+#else
 	s->isMprotectEnabled = false;
-	configMprotect(s);
+#endif
 	return s;
 }
 
@@ -529,7 +540,10 @@ static bool initializeShared(void)
 	shared = createShared();
 	if (!shared) return false;
 	if (!initialiseMutex()) return false;
+
+#if defined(VGC_MALLOC_MPROTECT_MP) && (defined(VGC_MALLOC_MPROTECT) || defined(VGC_MALLOC_MPROTECT_PKEY))
 	if (shared->isMprotectEnabled) startMprotect(10);
+#endif
 	return true;
 }
 

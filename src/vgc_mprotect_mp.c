@@ -379,16 +379,6 @@ void stopMprotect(void)
 }
 
 
-// createMprotect
-//
-void configMprotect(VGC_shared *s)
-{
-        s->isMprotectEnabled = true;
-        s->maxProcesses = 0;
-        s->children = 0;
-}
-
-
 // VGC_mallocStatusDebugCorruption
 //
 // Display current configuration of debug memory corruption
