@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 
 #include "vgc_common.h"
 #include "vgc_message.h"
@@ -886,7 +887,7 @@ ATTR_PUBLIC void *vgc_realloc(void *ptr, size_t size)
 	if (new == 0) return 0;
 
 	VGC_mallocHeader *mallocBlock = (VGC_mallocHeader*)((char*)ptr - sizeof(VGC_mallocHeader));	// Get size of currently pointed block (by "ptr" parameter)
-	size_t newSize = vgc_min(mallocBlock->size, size);	// Calculate the minimum of the current and old sizes
+	size_t newSize = MIN(mallocBlock->size, size);	// Calculate the minimum of the current and old sizes
 	memcpy(new, ptr, newSize);
 	vgc_free(ptr);
 	return new;

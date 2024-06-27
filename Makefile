@@ -12,7 +12,7 @@ OPTS   = -D_GNU_SOURCE \
 LIBDIR = $(HOME)/devel/vgcmalloc/lib64
 BINDIR = $(HOME)/devel/vgcmalloc/bin
 OBJDIR = /tmp/obj/vgcmalloc
-OBJS   = $(OBJDIR)/vgc_common.o $(OBJDIR)/vgc_pthread.o $(OBJDIR)/vgc_message.o $(OBJDIR)/vgc_malloc.o $(OBJDIR)/vgc_stacktrace.o $(OBJDIR)/vgc_network.o
+OBJS   = $(OBJDIR)/vgc_pthread.o $(OBJDIR)/vgc_message.o $(OBJDIR)/vgc_malloc.o $(OBJDIR)/vgc_stacktrace.o $(OBJDIR)/vgc_network.o
 
 
 ifneq ("","$(findstring -DVGC_MALLOC_STACKTRACE,$(OPTS))")
@@ -92,9 +92,6 @@ $(OBJDIR)/vgc_network.o:	src/vgc_network.c Makefile src/vgc_network.h
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
 $(OBJDIR)/vgc_pthread.o:	src/vgc_pthread.c Makefile src/vgc_pthread.h
-	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
-
-$(OBJDIR)/vgc_common.o:	src/vgc_common.c Makefile src/vgc_common.h
 	gcc $(COMP) $(OPTS) -Wall -c $< -o $@
 
 $(OBJDIR)/vgc_message.o:	src/vgc_message.c Makefile src/vgc_message.h

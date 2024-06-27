@@ -25,7 +25,3 @@
 // This is used by library module destructor
 //
 #define ATTR_DESTRUCTOR __attribute__((destructor))
-
-
-size_t vgc_max(size_t a, size_t b);
-size_t vgc_min(size_t a, size_t b);
