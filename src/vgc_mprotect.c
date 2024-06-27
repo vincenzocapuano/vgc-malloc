@@ -27,7 +27,7 @@ extern VGC_shared *shared;
 static const char *moduleName = "VGC-MALLOC-MPROTECT";
 
 
-bool do_mprotect(void *addr, size_t len, int prot)
+static bool do_mprotect(void *addr, size_t len, int prot)
 {
 	if (mprotect(addr, len, prot) == 0) return true;
 

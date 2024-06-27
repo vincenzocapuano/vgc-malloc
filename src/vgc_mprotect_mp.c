@@ -109,17 +109,24 @@ static void *manageCorruptionThread(void *_child)
 
 			vgc_message(VGC_MALLOC_DEBUG_LEVEL + 1, __FILE__, __LINE__, moduleName, __func__, "Debug corruption thread", "", "", "%sprotect at 0x%lx - pid %u from pid %u", block.prot == PROT_NONE ? "" : "un", block.header->protect, child->pid, block.sourcePID);
 
-			if (!do_mprotect(block.header->protect, shared->pageSize, block.prot)) {
-				// check errno, error
-				//
-				vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "Error", "", "", "%sprotecting returned: %d - %s - at 0x%lx - pid %u from pid %u", block.prot == PROT_NONE ? "" : "un", errno, strerror(errno), block.header->protect, child->pid, block.sourcePID);
-				if (block.prot != PROT_NONE) {
-					// In case of unprotect
+			if (block.prot == PROT_NONE) {
+				if (!VGC_mprotect(block.header)) {
+					// check errno, error
 					//
+					vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "Error", "", "", "protecting returned: %d - %s - at 0x%lx - pid %u from pid %u", errno, strerror(errno), block.header->protect, child->pid, block.sourcePID);
+					break;
+				}
+			}
+			else {
+				if (!VGC_munprotect(block.header)) {
+					// check errno, error
+					//
+					vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "Error", "", "", "unprotecting returned: %d - %s - at 0x%lx - pid %u from pid %u", errno, strerror(errno), block.header->protect, child->pid, block.sourcePID);
+
 					int result = 0;
 					do_write(fd, &result, sizeof(int));
+					break;
 				}
-				break;
 			}
 
 			int result = 1;
