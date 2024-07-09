@@ -49,7 +49,7 @@ static void stacktrace(ProcessPath *self, char **messages, int size)
 {
 	const int BUFFER_SIZE = 1024;
 
-	for (int i = 2; i < size - 1; i++) {
+	for (int i = 3; i < size - 1; i++) {
 		if (strncmp(messages[i], "/lib/", strlen("/lib/")) == 0) continue;
 		if (strncmp(messages[i], "/lib64/", strlen("/lib64/")) == 0) continue;
 		if (strncmp(messages[i], "/usr/lib64/", strlen("/usr/lib64/")) == 0) continue;
@@ -70,7 +70,7 @@ static void stacktrace(ProcessPath *self, char **messages, int size)
 			fgets(result, BUFFER_SIZE, in);
 			pclose(in);
 			*strchr(result, '\n') = 0; // Removed newline in addr2line string
-			if (result[0] != '?') vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "[bt]", "    Stack trace in", 0, "%s", result);
+			if (result[0] != '?') vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, "stacktrace", "    Stack trace in", 0, "%s", result);
 		}
 	}
 }

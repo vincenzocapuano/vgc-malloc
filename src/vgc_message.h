@@ -8,9 +8,9 @@
 
 // Defines
 //
-#define INFO_LEVEL  0
-#define ERROR_LEVEL 1
-#define DEBUG_LEVEL 3
+#define INFO_LEVEL     0
+#define ERROR_LEVEL    1
+#define DEBUG_LEVEL    3
 
 extern const char *const c_red;
 extern const char *const c_green;

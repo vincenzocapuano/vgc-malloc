@@ -116,15 +116,18 @@ ATTR_PUBLIC void vgc_message(const int level, char *file, int line, const char *
 
 
 	if (messageLevel < level) return;
-//	if (__log_error == 0 && CI_DEBUG_STDOUT == 0) return;
+//	if (__log_error == 0) return;
 
-	// Level =  0 - prints all in green
+	// Level =  0 - prints without headers
 	// Level =  1 - prints all in red
-	// Level >= 2 - prints default colors
+	// Level >= 3 - prints default colors
 	//
-	const char *color1 = level == 1 ? c_red : level == 0 ? c_green : c_black;
+//	const char *color1 = level == 1 ? c_red : level == 0 ? c_green : c_black;
+//	const char *color2 = level == 1 ? c_red : c_green;
+//	const char *color3 = level == 1 ? c_red : level == 0 ? c_green : c_blue;
+	const char *color1 = level == 1 ? c_red : c_black;
 	const char *color2 = level == 1 ? c_red : c_green;
-	const char *color3 = level == 1 ? c_red : level == 0 ? c_green : c_blue;
+	const char *color3 = level == 1 ? c_red : c_blue;
 
 #if 0
 	// Logs on file
@@ -144,21 +147,21 @@ ATTR_PUBLIC void vgc_message(const int level, char *file, int line, const char *
 	}
 #endif
 
-//	if (CI_DEBUG_STDOUT != 0) {
-		// Print on screen
-		//
-		int length = message(messageBuf, BufferSize, file, line, moduleName, functionName, title, subtitle, status, color1, color2, color3);
-		if (length < BufferSize && fmt != 0) {
-			va_list myargs;
-			va_start(myargs, fmt);
-				vsnprintf(&messageBuf[length], BufferSize - length, fmt, myargs);
-			va_end(myargs);
-		}
+	// Print on screen
+	//
+	bool noHeader = level == 0;
+	int length = noHeader ? message(messageBuf, BufferSize, file, line, "",         0,            0,     subtitle, status, color1, color2, color3)
+			      : message(messageBuf, BufferSize, file, line, moduleName, functionName, title, subtitle, status, color1, color2, color3);
+	if (length < BufferSize && fmt != 0) {
+		va_list myargs;
+		va_start(myargs, fmt);
+			vsnprintf(&messageBuf[length], BufferSize - length, fmt, myargs);
+		va_end(myargs);
+	}
 
-		PTHREAD_rwlockRdLock(&rwlock);
-			printf("%s%s\n", messageBuf, c_black);		// value originally from c-icap library
-		PTHREAD_rwlockUnlock(&rwlock);
-//	}
+	PTHREAD_rwlockRdLock(&rwlock);
+		printf("%s%s\n", messageBuf, c_black);
+	PTHREAD_rwlockUnlock(&rwlock);
 }
 
 #if 0

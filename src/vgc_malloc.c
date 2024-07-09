@@ -87,9 +87,9 @@ static void dumpMmapBlock(char *response, size_t size, const char *str, VGC_mmap
 		snprintf(&response[strlen(response)], mmapBlock->maxSize, "%s\n",dashes);
 	}
 	else {
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, desc, 0, "MMAP at 0x%.12lx", mmapBlock);
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, " ID memory         prev           next           status    size", "", 0);
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, dashes, "", 0);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, desc, 0, "MMAP at 0x%.12lx", mmapBlock);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, " ID memory         prev           next           status    size", "", 0);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, dashes, "", 0);
 	}
 
 	int i = 0;
@@ -120,7 +120,7 @@ static void dumpMmapBlock(char *response, size_t size, const char *str, VGC_mmap
 			strcat(&response[length], buffer);
 		}
 		else {
-			vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "%s%3d%s 0x%.12lx%s 0x%.12lx 0x%.12lx %s%s%s %9d bytes",
+			vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "%s%3d%s 0x%.12lx%s 0x%.12lx 0x%.12lx %s%s%s %9d bytes",
 					c_blue, i++, c_black,
 					(char*)mallocBlock + sizeof(VGC_mallocHeader), c_red,
 					mallocBlock->prev == 0 ? 0 : (char*)mallocBlock->prev + sizeof(VGC_mallocHeader),
@@ -176,13 +176,13 @@ static void dumpMmapBlock(char *response, size_t size, const char *str, VGC_mmap
 		strcat(&response[length], buffer);
 	}
 	else {
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, dashes, "", 0);
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size allocated.: %s%9d bytes", c_blue, shared->mmapBlockSize);
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size busy......: %s%9d bytes", c_blue, busySize);
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size free......: %s%9d bytes", c_blue, freeSize);
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size total.....: %s%9d bytes *", c_green, totalSize);
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size max.......: %s%9d bytes *", c_green, maxSize);
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, dashes, "", 0);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, dashes, "", 0);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size allocated.: %s%9d bytes", c_blue, shared->mmapBlockSize);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size busy......: %s%9d bytes", c_blue, busySize);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size free......: %s%9d bytes", c_blue, freeSize);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size total.....: %s%9d bytes *", c_green, totalSize);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, "", "", "size max.......: %s%9d bytes *", c_green, maxSize);
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, str, dashes, "", 0);
 	}
 }
 
@@ -265,7 +265,7 @@ static void mallocCleanup(void)
 	if (shared == 0) return;
 
 	if (shared->mmapBlockFirst != 0) {
-		vgc_message(ERROR_LEVEL, __FILE__, __LINE__, moduleName, __func__, "mmapBlockFirst", "Block is not empty", 0, "memory leak%s list", shared->mmapBlockFirst->elements > 1 ? "s" : "");
+		vgc_message(INFO_LEVEL, __FILE__, __LINE__, moduleName, __func__, "mmapBlockFirst", "Block is not empty", 0, "memory leak%s list", shared->mmapBlockFirst->elements > 1 ? "s" : "");
 		dumpMmapBlock(0, 0, __func__, shared->mmapBlockFirst, "Block is not empty");
 	}
 
