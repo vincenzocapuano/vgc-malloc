@@ -44,7 +44,7 @@ $(BINDIR)/t1:	$(OBJDIR)/test1.o $(LIBDIR)/libvgcmalloc.so
 	gcc $(COMP) $(OPTS) -L$(LIBDIR) -Wl,-rpath=$(LIBDIR) -o $@ $< -lvgcmalloc
 
 $(BINDIR)/t2:	$(OBJDIR)/test2.o $(LIBDIR)/libvgcnew.so
-	g++ $(COMP) $(OPTS) -Llib64 -Wl,-rpath=$(LIBDIR) -lvgcnew -o $@ $<
+	g++ $(COMP) $(OPTS) -Llib64 -Wl,-rpath=$(LIBDIR) -o $@ $< -lvgcnew
 
 $(BINDIR)/t3:	$(OBJDIR)/test3.o $(LIBDIR)/libvgcmalloc.so
 	gcc $(COMP) $(OPTS) -Llib64 -Wl,-rpath=$(LIBDIR) -o $@ $< -lvgcmalloc
