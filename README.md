@@ -1,1 +1,1 @@
-vgc-malloc is a C library that checks for memory leacks and buffer overruns.
+vgc-malloc is a C library that checks for memory leaks and buffer overruns.
